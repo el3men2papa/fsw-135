@@ -1,17 +1,27 @@
 const express = require('express')
 const movieRouter = express.Router()
-const uuid = require('uuid/v4')
+const Movie = require("../models/movie.js")
+//const uuid = require('uuid/v4')
 
-const movies = [
+/* const movies = [
   { title: "die hard", genre: "action", _id: uuid() },
   { title: "star wars IV", genre: "fantasy", _id: uuid() },
   { title: "lion king", genre: "fantasy", _id: uuid() },
   { title: "friday the 13th", genre: "horror", _id: uuid() },
-]
+] */
 
 // Get All
 movieRouter.get("/", (req, res, next) => {
-  return res.status(200).send(movies)
+  //this will pull the data from DB if there is no error
+Movie.find((err, movies) => {
+  //This will deisplay the error f there is any
+if(err){
+  res.status(500)
+  return next(err)
+}
+//this will display success status if there is no error
+return res.status(200).send(movies)
+})
 })
 
 
@@ -22,7 +32,6 @@ movieRouter.post("/", (req, res, next) => {
   movies.push(newMovie)
   return res.status(201).send(newMovie)
 })
-
 
 // Get One
 movieRouter.get("/:movieId", (req, res, next) => {
