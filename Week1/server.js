@@ -9,7 +9,7 @@ app.use(morgan('dev'))
 
 //connect to DB
 // This is connecting to the MongoDB
-mongoose.connect("mongodb://localhost:27017/inventorydb",
+mongoose.connect("mongodb://localhost:27017/moviesdb",
 {
   //this is the configuration Objects 
   useNewUrlParser: true,

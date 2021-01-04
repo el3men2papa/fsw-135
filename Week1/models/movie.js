@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 //movie blueprint (This set rules)
 const movieSchema = new Schema({
     //set rules for all the fields with in the DB
-    tittle: {
+    title: {
         type: String,
         required: true
     },

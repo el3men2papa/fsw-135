@@ -26,13 +26,18 @@ return res.status(200).send(movies)
 
 
 // Post One
-movieRouter.post("/", (req, res, next) => {
-  const newMovie = req.body
-  newMovie._id = uuid()
-  movies.push(newMovie)
-  return res.status(201).send(newMovie)
+ movieRouter.post("/", (req, res, next) => {
+  const newMovie = new Movie(req.body)
+  newMovie.save((err, saveMovie) => {
+    if(err){
+      res.status(500)
+      return next(err)
+    }
+    return res.status(201).send(saveMovie)
+  })
 })
 
+/*
 // Get One
 movieRouter.get("/:movieId", (req, res, next) => {
   const movieId = req.params.movieId
@@ -76,6 +81,6 @@ movieRouter.put("/:movieId", (req, res, next) => {
   const updatedMovie = Object.assign(movies[movieIndex], updateObject)
   return res.status(201).send(updatedMovie)
 })
-
+ */
 
 module.exports = movieRouter
