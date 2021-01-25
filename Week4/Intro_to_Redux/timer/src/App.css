@@ -1,0 +1,44 @@
+*{
+  text-align: center;
+ }
+
+.stopbtn{
+  color: rgb(92, 31, 31);
+  background-color: aqua;
+}
+
+.startbtn{
+  color:green;
+  background-color: azure;
+  margin: 10px;
+}
+
+.resetbtn{
+  color: black;
+  background-color: red;
+  margin: 10px;
+}
+
+.time{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 10%;
+  border: 1px black solid;
+}
+
+body, html {
+  height: 100%;
+}
+
+body{
+ background-image: url("./pictures/stopwatch-background.jpg"); 
+
+ /* Full height */
+ height: 300%; 
+
+ /* Center and scale the image nicely */
+ background-position: center;
+ background-repeat: no-repeat;
+ background-size: cover;
+}
