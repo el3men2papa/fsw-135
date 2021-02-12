@@ -1,83 +1,37 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Movie from "./components/Movie.js";
-import MovieForm from "./components/MovieForm.js";
+import React, { useContext } from 'react'
+import { Switch, Route, Redirect } from 'react-router-dom'
+import Navbar from './components/Navbar.js'
+import Auth from './components/Auth.js'
+import Profile from './components/Profile.js'
+import Public from './components/Public.js'
+import ProtectedRoute from './components/ProtectedRoute.js'
+import { UserContext } from './context/UserProvider.js'
 
-export default function App() {
-  const [movies, setMovies] = useState([]);
 
-  function getMovies() {
-    axios
-      .get("/movies")
-      .then(res => setMovies(res.data))
-      .catch(err => console.log(err.response.data.errMsg));
-  }
-
-  function addMovie(newMovie) {
-    axios
-      .post("/movies", newMovie)
-      .then(res => {
-        setMovies(prevMovies => [...prevMovies, res.data]);
-      })
-      .catch(err => console.log(err));
-  }
-
-  function deleteMovie(movieId) {
-    axios
-      .delete(`/movies/${movieId}`)
-      .then(res => {
-        setMovies(prevMovies =>
-          prevMovies.filter(movie => movie._id !== movieId)
-        );
-      })
-      .catch(err => console.log(err));
-  }
-
-  function editMovie(updates, movieId) {
-    axios
-      .put(`/movies/${movieId}`, updates)
-      .then(res => {
-        setMovies(prevMovies =>
-          prevMovies.map(movie => (movie._id !== movieId ? movie : res.data))
-        );
-      })
-      .catch(err => console.log(err));
-  }
-
-  function handleFilter(e) {
-    console.log(e.target.value);
-  }
-
-  useEffect(() => {
-    getMovies();
-  }, []);
-
+//This will re-derect to the page if they are not or log in
+export default function App(){
+  const { token, logout } = useContext(UserContext)
   return (
-    <div>
-      <div className="movie-container">
-        <MovieForm submit={addMovie} btnText="Add Movie" />
-
-        {/* 
-          Uncomment the below section for lesson 2.5 - Using params and queries in mongoose  
-        */}
-
-        {/* <h4>Filter by Genre</h4>
-        <select onChange={handleFilter} className="filter-form">
-          <option value="reset">All Movies</option>
-          <option value="action">Action</option>
-          <option value="fantasy">Fantasy</option>
-          <option value="horror">Horror</option>
-        </select> */}
-
-        {movies.map(movie => (
-          <Movie
-            {...movie}
-            key={movie.title}
-            deleteMovie={deleteMovie}
-            editMovie={editMovie}
-          />
-        ))}
-      </div>
+    <div className="app">
+      { token && <Navbar logout={ logout }/> }
+      <Switch>
+        <Route 
+          exact path="/" 
+          render={()=> token ? <Redirect to="/profile"/> : <Auth />}
+        />
+        <ProtectedRoute 
+          path="/profile"
+          component={Profile}
+          redirectTo="/"
+          token={token}
+        />
+        <ProtectedRoute 
+          path="/public"
+          component={Public}
+          redirectTo="/"
+          token={token}
+        />
+      </Switch>
     </div>
-  );
+  )
 }
